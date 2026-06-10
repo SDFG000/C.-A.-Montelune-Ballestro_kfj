@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C.A. Montelune Ballestro - النادي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #D32F2F;
+            --primary-blue: #1565C0;
+            --primary-white: #FFFFFF;
+            --dark-bg: #0a0a1a;
+            --card-bg: rgba(255,255,255,0.03);
+            --card-border: rgba(255,255,255,0.08);
+            --accent-gold: #FFD700;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(21, 101, 192, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(211, 47, 47, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 60%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, 2%) rotate(1deg); }
+            66% { transform: translate(-1%, 1%) rotate(-1deg); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .nav-logo img {
+            width: 45px; height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(21, 101, 192, 0.5));
+        }
+        .nav-logo-text {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+        .nav-logo-text span { color: var(--primary-red); }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-white);
+            background: rgba(211, 47, 47, 0.2);
+        }
+
+        .page {
+            display: none;
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .page.active { display: block; }
+
+        /* ===== HOME PAGE ===== */
+        .hero {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(211, 47, 47, 0.15);
+            border: 1px solid rgba(211, 47, 47, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--primary-red);
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-badge .star { color: var(--accent-gold); }
+        .hero-logo {
+            width: 200px; height: 200px;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease, logoGlow 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(21, 101, 192, 0.4)) drop-shadow(0 0 60px rgba(211, 47, 47, 0.2));
+        }
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 30px rgba(21, 101, 192, 0.4)) drop-shadow(0 0 60px rgba(211, 47, 47, 0.2)); }
+            50% { filter: drop-shadow(0 0 40px rgba(21, 101, 192, 0.6)) drop-shadow(0 0 80px rgba(211, 47, 47, 0.3)); }
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            animation: fadeInUp 1s ease 0.2s both;
+            background: linear-gradient(135deg, #fff 0%, #a0a0ff 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+        .hero-year {
+            font-size: 1rem;
+            color: var(--accent-gold);
+            font-weight: 700;
+            letter-spacing: 3px;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+        .hero-desc {
+            max-width: 600px;
+            margin: 30px auto 0;
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 0.95rem;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 50px;
+            animation: fadeInUp 1s ease 1s both;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .formation-preview {
+            margin-top: 50px;
+            padding: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease 1.2s both;
+            max-width: 500px;
+            width: 100%;
+        }
+        .formation-preview h3 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .formation-dots {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .formation-line {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .formation-dot {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+        .formation-dot.gk { background: rgba(255, 215, 0, 0.2); border-color: var(--accent-gold); color: var(--accent-gold); }
+        .formation-dot.def { background: rgba(21, 101, 192, 0.2); border-color: var(--primary-blue); color: var(--primary-blue); }
+        .formation-dot.mid { background: rgba(255, 255, 255, 0.1); border-color: var(--text-secondary); color: var(--text-secondary); }
+        .formation-dot.fwd { background: rgba(211, 47, 47, 0.2); border-color: var(--primary-red); color: var(--primary-red); }
+        .formation-dot.captain { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+
+        .cta-btn {
+            margin-top: 40px;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, var(--primary-red), #b71c1c);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 1.4s both;
+            box-shadow: 0 4px 20px rgba(211, 47, 47, 0.3);
+        }
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(211, 47, 47, 0.5);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== LINEUP PAGE ===== */
+        .lineup-page {
+            padding: 100px 20px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .lineup-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .lineup-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+        .lineup-header .formation-tag {
+            display: inline-block;
+            padding: 6px 20px;
+            background: rgba(21, 101, 192, 0.2);
+            border: 1px solid var(--primary-blue);
+            border-radius: 50px;
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .pitch-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pitch {
+            width: 500px;
+            height: 700px;
+            background: linear-gradient(180deg, #1a5c3a 0%, #144d2f 100%);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 3px solid rgba(255,255,255,0.1);
+        }
+        .pitch::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px; height: 120px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+        .pitch::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+        }
+        .center-spot {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px; height: 8px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+        }
+        .penalty-area-top, .penalty-area-bottom {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 80px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .penalty-area-top {
+            top: 0;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+        .penalty-area-bottom {
+            bottom: 0;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+        }
+        .goal-area-top, .goal-area-bottom {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 30px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .goal-area-top {
+            top: 0;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .goal-area-bottom {
+            bottom: 0;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .player-on-pitch {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .player-on-pitch:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+            z-index: 20;
+        }
+        .player-on-pitch .player-avatar {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            border: 3px solid;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .player-on-pitch.gk .player-avatar { border-color: var(--accent-gold); color: var(--accent-gold); }
+        .player-on-pitch.def .player-avatar { border-color: var(--primary-blue); color: var(--primary-blue); }
+        .player-on-pitch.mid .player-avatar { border-color: #4CAF50; color: #4CAF50; }
+        .player-on-pitch.fwd .player-avatar { border-color: var(--primary-red); color: var(--primary-red); }
+        .player-on-pitch.captain .player-avatar {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 4px 15px rgba(0,0,0,0.4);
+            animation: captainPulse 2s ease-in-out infinite;
+        }
+        @keyframes captainPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 0 4px 15px rgba(0,0,0,0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 4px 15px rgba(0,0,0,0.4); }
+        }
+        .player-on-pitch .player-name {
+            margin-top: 5px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            white-space: nowrap;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .player-on-pitch .player-pos {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .player-detail-panel {
+            width: 350px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        .player-detail-panel.empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: var(--text-muted);
+        }
+        .player-detail-panel.empty svg {
+            width: 60px; height: 60px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .detail-avatar {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 900;
+            border: 3px solid var(--primary-red);
+            background: rgba(211, 47, 47, 0.1);
+            color: var(--primary-red);
+        }
+        .detail-info h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .detail-info .detail-pos {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .detail-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .detail-stat {
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+        .detail-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+        .detail-stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .detail-born {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .detail-born strong {
+            color: var(--accent-gold);
+        }
+
+        .squad-section {
+            margin-top: 60px;
+        }
+        .squad-section h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .squad-section h2 span {
+            color: var(--primary-red);
+        }
+        .squad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .squad-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .squad-card:hover {
+            border-color: rgba(211, 47, 47, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .squad-card.starting {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.03);
+        }
+        .squad-card.starting .card-pos {
+            color: var(--accent-gold);
+        }
+        .squad-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .squad-card-avatar {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 800;
+            border: 2px solid;
+        }
+        .squad-card-avatar.gk { border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(255, 215, 0, 0.1); }
+        .squad-card-avatar.def { border-color: var(--primary-blue); color: var(--primary-blue); background: rgba(21, 101, 192, 0.1); }
+        .squad-card-avatar.mid { border-color: #4CAF50; color: #4CAF50; background: rgba(76, 175, 80, 0.1); }
+        .squad-card-avatar.fwd { border-color: var(--primary-red); color: var(--primary-red); background: rgba(211, 47, 47, 0.1); }
+        .squad-card-info h4 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .squad-card-info .card-pos {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .squad-card-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .squad-card-stat {
+            text-align: center;
+            padding: 8px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+        .squad-card-stat-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .squad-card-stat-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .squad-card-born {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding-top: 10px;
+            border-top: 1px solid var(--card-border);
+        }
+        .captain-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--accent-gold);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        .position-group {
+            margin-bottom: 30px;
+        }
+        .position-group h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-right: 15px;
+            border-right: 3px solid var(--primary-red);
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 900px) {
+            .pitch-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .player-detail-panel {
+                width: 100%;
+                max-width: 500px;
+                position: static;
+            }
+            .pitch {
+                width: 100%;
+                max-width: 400px;
+                height: 560px;
+            }
+            .hero-title { font-size: 2.2rem; }
+            .stats-row { gap: 30px; }
+            .nav { padding: 15px 20px; }
+            .nav-links { gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+
+    <nav class="nav">
+        <div class="nav-logo">
+            <img src="/mnt/agents/upload/1000585352.png" alt="C.A. Montelune Ballestro">
+            <div class="nav-logo-text">C.A. <span>Montelune</span> Ballestro</div>
+        </div>
+        <div class="nav-links">
+            <button class="nav-link active" onclick="showPage('home')">الرئيسية</button>
+            <button class="nav-link" onclick="showPage('lineup')">التشكيلة</button>
+        </div>
+    </nav>
+
+    <!-- ===== HOME PAGE ===== -->
+    <div class="page active" id="page-home">
+        <div class="hero">
+            <div class="hero-badge">
+                <span class="star">★</span>
+                <span>نادي تأسس عام 1931</span>
+                <span class="star">★</span>
+            </div>
+            <img src="/mnt/agents/upload/1000585352.png" alt="C.A. Montelune Ballestro" class="hero-logo">
+            <h1 class="hero-title">C.A. Montelune Ballestro</h1>
+            <p class="hero-subtitle">نادي كرة القدم التاريخي</p>
+            <p class="hero-year">EST. 1931</p>
+            <p class="hero-desc">
+                نادي C.A. Montelune Ballestro، تأسس عام 1931، يحمل إرثاً عريقاً في عالم كرة القدم. 
+                يتميز النادي بألوانه الأحمر والأزرق والتنين الأبيض الشهير في شعاره، 
+                رمزاً للقوة والتقاليد العميقة.
+            </p>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number">1931</div>
+                    <div class="stat-label">سنة التأسيس</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">32</div>
+                    <div class="stat-label">لاعب في الفريق</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4-2-3-1</div>
+                    <div class="stat-label">الخطة التكتيكية</div>
+                </div>
+            </div>
+
+            <div class="formation-preview">
+                <h3>⚽ التشكيلة الأساسية - 4-2-3-1</h3>
+                <div class="formation-dots">
+                    <div class="formation-line">
+                        <div class="formation-dot fwd">CF</div>
+                    </div>
+                    <div class="formation-line">
+                        <div class="formation-dot mid">SMF</div>
+                        <div class="formation-dot mid captain">AMF</div>
+                        <div class="formation-dot mid">SMF</div>
+                    </div>
+                    <div class="formation-line">
+                        <div class="formation-dot mid">DMF</div>
+                        <div class="formation-dot mid">DMF</div>
+                    </div>
+                    <div class="formation-line">
+                        <div class="formation-dot def">LB</div>
+                        <div class="formation-dot def">CB</div>
+                        <div class="formation-dot def">CB</div>
+                        <div class="formation-dot def">RB</div>
+                    </div>
+                    <div class="formation-line">
+                        <div class="formation-dot gk">GK</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="cta-btn" onclick="showPage('lineup')">عرض التشكيلة الكاملة →</button>
+        </div>
+    </div>
+
+    <!-- ===== LINEUP PAGE ===== -->
+    <div class="page" id="page-lineup">
+        <div class="lineup-page">
+            <div class="lineup-header">
+                <h1>التشكيلة الأساسية</h1>
+                <div class="formation-tag">4-2-3-1</div>
+            </div>
+
+            <div class="pitch-container">
+                <div class="pitch" id="pitch">
+                    <div class="center-spot"></div>
+                    <div class="penalty-area-top"></div>
+                    <div class="penalty-area-bottom"></div>
+                    <div class="goal-area-top"></div>
+                    <div class="goal-area-bottom"></div>
+
+                    <!-- GK -->
+                    <div class="player-on-pitch gk" style="left:50%; top:8%;" onclick="showPlayerDetail('ROCCHI')">
+                        <div class="player-avatar">1</div>
+                        <div class="player-name">ROCCHI</div>
+                        <div class="player-pos">GK</div>
+                    </div>
+
+                    <!-- RB -->
+                    <div class="player-on-pitch def" style="left:82%; top:22%;" onclick="showPlayerDetail('COLEMAN')">
+                        <div class="player-avatar">2</div>
+                        <div class="player-name">COLEMAN</div>
+                        <div class="player-pos">RB</div>
+                    </div>
+
+                    <!-- CB Right -->
+                    <div class="player-on-pitch def" style="left:62%; top:22%;" onclick="showPlayerDetail('P. ASSUNÇÃO')">
+                        <div class="player-avatar">4</div>
+                        <div class="player-name">P. ASSUNÇÃO</div>
+                        <div class="player-pos">CB</div>
+                    </div>
+
+                    <!-- CB Left -->
+                    <div class="player-on-pitch def" style="left:38%; top:22%;" onclick="showPlayerDetail('PATOCKA')">
+                        <div class="player-avatar">5</div>
+                        <div class="player-name">PATOCKA</div>
+                        <div class="player-pos">CB</div>
+                    </div>
+
+                    <!-- LB -->
+                    <div class="player-on-pitch def" style="left:18%; top:22%;" onclick="showPlayerDetail('CEJUMI')">
+                        <div class="player-avatar">3</div>
+                        <div class="player-name">CEJUMI</div>
+                        <div class="player-pos">LB</div>
+                    </div>
+
+                    <!-- DMF Right -->
+                    <div class="player-on-pitch mid" style="left:60%; top:38%;" onclick="showPlayerDetail('ÉDOUARD CISSÉ')">
+                        <div class="player-avatar">6</div>
+                        <div class="player-name">É. CISSÉ</div>
+                        <div class="player-pos">DMF</div>
+                    </div>
+
+                    <!-- DMF Left -->
+                    <div class="player-on-pitch mid" style="left:40%; top:38%;" onclick="showPlayerDetail('MESTO')">
+                        <div class="player-avatar">8</div>
+                        <div class="player-name">MESTO</div>
+                        <div class="player-pos">DMF</div>
+                    </div>
+
+                    <!-- SMF Right -->
+                    <div class="player-on-pitch mid" style="left:78%; top:55%;" onclick="showPlayerDetail('CHÁVEZ')">
+                        <div class="player-avatar">7</div>
+                        <div class="player-name">CHÁVEZ</div>
+                        <div class="player-pos">SMF</div>
+                    </div>
+
+                    <!-- SMF Left -->
+                    <div class="player-on-pitch mid" style="left:22%; top:55%;" onclick="showPlayerDetail('GULHERME')">
+                        <div class="player-avatar">11</div>
+                        <div class="player-name">GULHERME</div>
+                        <div class="player-pos">SMF</div>
+                    </div>
+
+                    <!-- AMF (Captain) -->
+                    <div class="player-on-pitch mid captain" style="left:50%; top:55%;" onclick="showPlayerDetail('ABDULWAHAB')">
+                        <div class="player-avatar">10</div>
+                        <div class="player-name">ABDULWAHAB</div>
+                        <div class="player-pos">AMF ©</div>
+                    </div>
+
+                    <!-- CF -->
+                    <div class="player-on-pitch fwd" style="left:50%; top:75%;" onclick="showPlayerDetail('FONTAIL')">
+                        <div class="player-avatar">9</div>
+                        <div class="player-name">FONTAIL</div>
+                        <div class="player-pos">CF</div>
+                    </div>
+                </div>
+
+                <div class="player-detail-panel" id="player-detail">
+                    <div class="empty">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        <p>اضغط على أي لاعب لعرض تفاصيله</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Squad Section -->
+            <div class="squad-section">
+                <h2>قائمة الفريق <span>الكاملة</span></h2>
+                <div class="squad-grid" id="squad-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Player data
+        const players = {
+            "ROCCHI": {pos: "GK", nat: "USA", age: 24, foot: "R", h: 195, w: 95, born: "NEW YORK", num: 1, starting: true},
+            "P. ASSUNÇÃO": {pos: "CB", nat: "PEN", age: 19, foot: "L", h: 182, w: 80, born: "", num: 4, starting: true},
+            "GUNINOU": {pos: "SB", nat: "PES", age: 20, foot: "L", h: 167, w: 64, born: "", num: 13, starting: false},
+            "SALIBUR": {pos: "SB", nat: "WAS", age: 17, foot: "L", h: 173, w: 70, born: "", num: 14, starting: false},
+            "DJOUROU": {pos: "SMF", nat: "PEU", age: 19, foot: "L", h: 170, w: 67, born: "MONTELUNE، بالقرب من نهر لوناري", num: 15, starting: false},
+            "FERNANDINHO": {pos: "SS", nat: "PES", age: 24, foot: "R", h: 165, w: 66, born: "", num: 16, starting: false},
+            "SANDRO": {pos: "CF", nat: "PEV", age: 22, foot: "R", h: 180, w: 78, born: "", num: 17, starting: false},
+            "MARCUS GRIGORE": {pos: "AMF", nat: "PAS", age: 17, foot: "L", h: 175, w: 69, born: "", num: 18, starting: false},
+            "PATOCKA": {pos: "CB", nat: "PAS", age: 33, foot: "L", h: 196, w: 92, born: "", num: 5, starting: true},
+            "CHÁVEZ": {pos: "SMF", nat: "PEU", age: 21, foot: "L", h: 165, w: 62, born: "METROPOLIS، ولاكن له أصول من WAS، كان يلعب لصالحهم في الفئات السنية قبل ان يقرر اختيار PEU", num: 7, starting: true},
+            "DUNE": {pos: "SB", nat: "WAS", age: 16, foot: "L", h: 165, w: 64, born: "", num: 19, starting: false},
+            "COLEMAN": {pos: "SB", nat: "WAS", age: 21, foot: "R", h: 174, w: 71, born: "", num: 2, starting: true},
+            "CHARLIE CHARISTEAS": {pos: "SS", nat: "WAS", age: 17, foot: "L", h: 182, w: 77, born: "", num: 20, starting: false},
+            "ÉDOUARD CISSÉ": {pos: "DMF", nat: "PEV", age: 23, foot: "R", h: 178, w: 73, born: "", num: 6, starting: true},
+            "MESTO": {pos: "DMF", nat: "PAS", age: 23, foot: "R", h: 178, w: 84, born: "", num: 8, starting: true},
+            "RIOS": {pos: "DMF", nat: "PEN", age: 18, foot: "R", h: 178, w: 74, born: "", num: 21, starting: false},
+            "RANOW": {pos: "SS", nat: "PEU", age: 16, foot: "R", h: 171, w: 66, born: "DRANCOL، بـ حي في منتصف المدينة", num: 22, starting: false},
+            "DZEMAILE": {pos: "CF", nat: "BIH", age: 17, foot: "L", h: 192, w: 80, born: "SARAJEVO، وايضا له أصول من الـ PAS", num: 23, starting: false},
+            "CEJUMI": {pos: "DMF", nat: "PEU", age: 22, foot: "L", h: 177, w: 78, born: "ERDIN", num: 3, starting: true},
+            "WELLITON": {pos: "CF", nat: "BRA", age: 23, foot: "R", h: 175, w: 74, born: "São Paulo", num: 24, starting: false},
+            "FONTAIL": {pos: "CF", nat: "FRA", age: 24, foot: "R", h: 174, w: 72, born: "Île-de-France", num: 9, starting: true},
+            "SEBENS": {pos: "WF", nat: "PEN", age: 19, foot: "L", h: 179, w: 75, born: "", num: 25, starting: false},
+            "FERNANDÃO": {pos: "CF", nat: "PES", age: 32, foot: "L", h: 190, w: 85, born: "", num: 26, starting: false},
+            "TIENDALLI": {pos: "AMF", nat: "PEU", age: 21, foot: "L", h: 184, w: 81, born: "Valma", num: 27, starting: false},
+            "ARIAUDO": {pos: "AMF", nat: "PEU", age: 16, foot: "L", h: 171, w: 66, born: "DRANCOL، بـ حي في منتصف المدينة", num: 28, starting: false},
+            "ABDULWAHAB": {pos: "CMF", nat: "SAU", age: 20, foot: "R", h: 160, w: 51, born: "", num: 10, starting: true, captain: true},
+            "SOTO": {pos: "CMF", nat: "PES", age: 17, foot: "L", h: 173, w: 73, born: "", num: 29, starting: false},
+            "MADURO": {pos: "SS", nat: "PEU", age: 17, foot: "R", h: 181, w: 75, born: "Montelune", num: 30, starting: false},
+            "GULHERME": {pos: "SMF", nat: "PEV", age: 24, foot: "L", h: 166, w: 64, born: "", num: 11, starting: true},
+            "PAPA": {pos: "CB", nat: "PEL", age: 23, foot: "L", h: 185, w: 73, born: "", num: 31, starting: false},
+            "WASHINGTON": {pos: "SS", nat: "PES", age: 20, foot: "L", h: 179, w: 87, born: "", num: 32, starting: false},
+            "TURREVA": {pos: "CB", nat: "PES", age: 24, foot: "R", h: 178, w: 78, born: "", num: 33, starting: false},
+        };
+
+        const posCategories = {
+            "GK": "حراس المرمى",
+            "CB": "قلوب الدفاع",
+            "SB": "الظهيرات",
+            "DMF": "وسط دفاعي",
+            "CMF": "وسط متوسط",
+            "AMF": "وسط متقدم",
+            "SMF": "أجنحة",
+            "WF": " wingers",
+            "SS": "مهاجم ثانٍ",
+            "CF": "مهاجمين"
+        };
+
+        function getPosCategory(pos) {
+            const base = pos.replace(/\(.*?\)/g, '').trim();
+            if (base.includes('GK')) return 'GK';
+            if (base.includes('CB')) return 'CB';
+            if (base.includes('SB')) return 'SB';
+            if (base.includes('DMF')) return 'DMF';
+            if (base.includes('CMF')) return 'CMF';
+            if (base.includes('AMF')) return 'AMF';
+            if (base.includes('SMF')) return 'SMF';
+            if (base.includes('WF')) return 'WF';
+            if (base.includes('SS')) return 'SS';
+            if (base.includes('CF')) return 'CF';
+            return base;
+        }
+
+        function getAvatarClass(pos) {
+            const cat = getPosCategory(pos);
+            if (cat === 'GK') return 'gk';
+            if (['CB', 'SB'].includes(cat)) return 'def';
+            if (['DMF', 'CMF', 'AMF', 'SMF', 'WF'].includes(cat)) return 'mid';
+            return 'fwd';
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            event.target.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function showPlayerDetail(name) {
+            const p = players[name];
+            if (!p) return;
+
+            const isCaptain = p.captain ? '<span class="captain-badge">© القائد</span>' : '';
+            const bornText = p.born ? `<div class="detail-born"><strong>📍 المولد:</strong><br>${p.born}</div>` : '';
+
+            document.getElementById('player-detail').innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-avatar">${p.num}</div>
+                    <div class="detail-info">
+                        <h3>${isCaptain}${name}</h3>
+                        <div class="detail-pos">${p.pos} | ${p.nat}</div>
+                    </div>
+                </div>
+                <div class="detail-stats">
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">العمر</div>
+                        <div class="detail-stat-value">${p.age} سنة</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">القدم</div>
+                        <div class="detail-stat-value">${p.foot === 'R' ? 'اليمين' : 'اليسار'}</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">الطول</div>
+                        <div class="detail-stat-value">${p.h} سم</div>
+                    </div>
+                    <div class="detail-stat">
+                        <div class="detail-stat-label">الوزن</div>
+                        <div class="detail-stat-value">${p.w} كجم</div>
+                    </div>
+                </div>
+                ${bornText}
+            `;
+        }
+
+        // Generate squad cards
+        function generateSquad() {
+            const grid = document.getElementById('squad-grid');
+
+            // Sort: starting first, then by position
+            const sorted = Object.entries(players).sort((a, b) => {
+                if (a[1].starting && !b[1].starting) return -1;
+                if (!a[1].starting && b[1].starting) return 1;
+                return a[1].num - b[1].num;
+            });
+
+            sorted.forEach(([name, p]) => {
+                const cls = getAvatarClass(p.pos);
+                const captainBadge = p.captain ? '<span class="captain-badge">©</span>' : '';
+                const startingClass = p.starting ? 'starting' : '';
+                const bornText = p.born ? `<div class="squad-card-born">📍 ${p.born}</div>` : '';
+
+                grid.innerHTML += `
+                    <div class="squad-card ${startingClass}" onclick="showPlayerDetail('${name}')">
+                        <div class="squad-card-header">
+                            <div class="squad-card-avatar ${cls}">${p.num}</div>
+                            <div class="squad-card-info">
+                                <h4>${captainBadge}${name}</h4>
+                                <div class="card-pos">${p.pos} | ${p.nat}</div>
+                            </div>
+                        </div>
+                        <div class="squad-card-stats">
+                            <div class="squad-card-stat">
+                                <div class="squad-card-stat-value">${p.age}</div>
+                                <div class="squad-card-stat-label">العمر</div>
+                            </div>
+                            <div class="squad-card-stat">
+                                <div class="squad-card-stat-value">${p.h}</div>
+                                <div class="squad-card-stat-label">سم</div>
+                            </div>
+                            <div class="squad-card-stat">
+                                <div class="squad-card-stat-value">${p.w}</div>
+                                <div class="squad-card-stat-label">كجم</div>
+                            </div>
+                            <div class="squad-card-stat">
+                                <div class="squad-card-stat-value">${p.foot}</div>
+                                <div class="squad-card-stat-label">القدم</div>
+                            </div>
+                        </div>
+                        ${bornText}
+                    </div>
+                `;
+            });
+        }
+
+        // Create particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['rgba(21, 101, 192, 0.3)', 'rgba(211, 47, 47, 0.3)', 'rgba(255, 215, 0, 0.2)'];
+
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = Math.random() * 4 + 2;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                container.appendChild(p);
+            }
+        }
+
+        createParticles();
+        generateSquad();
+    </script>
+</body>
+</html>
